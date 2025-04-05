@@ -2,13 +2,14 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import { AppKitProvider } from "./components/app-kit-provider.tsx";
+import { HomePage } from "./pages/home/index.tsx";
 
-import App from "./App.tsx";
+import "./index.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AppKitProvider>
-      <App />
+      <HomePage />
     </AppKitProvider>
   </StrictMode>
 );
