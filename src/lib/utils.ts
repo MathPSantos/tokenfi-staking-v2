@@ -92,3 +92,15 @@ export function parseDuration(seconds: bigint) {
 
   return null;
 }
+
+export const formatPercentage = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+export const formatToken = new Intl.NumberFormat("en-US", {
+  style: "decimal",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});

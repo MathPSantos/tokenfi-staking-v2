@@ -1,11 +1,13 @@
 import { useAppKitAccount } from "@reown/appkit/react";
 import { useMemo } from "react";
-import { formatUnits } from "viem";
 
 import { ConnectButton } from "@/components/connect-button";
 import { useListStakesByUserAddress } from "@/services/staking/list-stakes-by-user-address";
 import { AprModal } from "@/components/apr-modal";
 import { CreateStakeModal } from "@/components/create-stake-modal";
+
+import { StakeCard } from "./containers/stake-card";
+import { ClaimAllModal } from "./containers/claim-all-modal";
 
 export function HomePage() {
   const { address, isConnected } = useAppKitAccount({ namespace: "eip155" });
@@ -36,8 +38,11 @@ export function HomePage() {
       <main className="flex-1">
         <section>
           <div className="max-w-(--container-width) mx-auto py-8 px-4 space-y-6">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold">Your stakings</h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-bold me-auto">Your stakings</h1>
+              {state === "has-stakes" && (
+                <ClaimAllModal stakes={stakes ?? []} />
+              )}
               <CreateStakeModal />
             </div>
 
@@ -61,11 +66,13 @@ export function HomePage() {
                   </div>
                 ),
                 "has-stakes": (
-                  <div className="grid grid-cols-1 gap-2">
-                    {stakes?.map((stake) => (
-                      <div key={stake.stakedAmount.toString()}>
-                        {formatUnits(stake.stakedAmount, 9)}
-                      </div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+                    {stakes?.map((stake, index) => (
+                      <StakeCard
+                        key={`stake-${index}`}
+                        stake={stake}
+                        index={index}
+                      />
                     ))}
                   </div>
                 ),

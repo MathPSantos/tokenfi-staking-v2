@@ -71,9 +71,7 @@ export function CreateStakeModal() {
       },
     ],
   });
-  const { mutate: createStake, isPending, error } = useCreateStake();
-
-  console.log({ error });
+  const { mutate: createStake, isPending } = useCreateStake();
 
   const form = useForm<CreateStakeFormData>({
     resolver: zodResolver(formSchema),
