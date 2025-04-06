@@ -9,14 +9,16 @@ import { wagmiAdapter } from "@/lib/packages/app-kit";
 type UseCalculatePenaltyParams = {
   duration: bigint;
   stakedAmount: bigint;
+  chainId: number;
 };
 
 export function useCalculatePenalty({
   duration,
   stakedAmount,
+  chainId,
 }: UseCalculatePenaltyParams) {
   const { data: penaltyFeeCalculatorContractAddress } =
-    useGetPenaltyFeeCalculatorContractAddress();
+    useGetPenaltyFeeCalculatorContractAddress({ chainId });
 
   return useQuery({
     queryKey: [
@@ -35,6 +37,7 @@ export function useCalculatePenalty({
         abi: PenaltyFeeContract.abi,
         address: penaltyFeeCalculatorContractAddress,
         functionName: "calculate",
+        chainId,
         args: [stakedAmount, duration, TOKENFI_STAKING_POOL_CONTRACT_ADDRESS],
       });
     },

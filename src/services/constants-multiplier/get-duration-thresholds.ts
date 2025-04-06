@@ -6,11 +6,11 @@ import { MultipliersContract } from "@/lib/contracts";
 import { wagmiAdapter } from "@/lib/packages/app-kit";
 import { useGetRewardsMultiplierContractAddress } from "@/services/staking/get-rewards-multiplier-contract-address";
 
-export function useGetDurationThresholds() {
-  const { data: address } = useGetRewardsMultiplierContractAddress();
+export function useGetDurationThresholds({ chainId }: { chainId: number }) {
+  const { data: address } = useGetRewardsMultiplierContractAddress({ chainId });
 
   return useQuery({
-    queryKey: ["get-duration-thresholds", { address }],
+    queryKey: ["get-duration-thresholds", { address, chainId }],
     queryFn: () => {
       if (!address || !isAddress(address)) {
         throw new Error("Invalid address");
@@ -20,6 +20,7 @@ export function useGetDurationThresholds() {
         abi: MultipliersContract.abi,
         address,
         functionName: "getDurationThresholds",
+        chainId,
       });
     },
     enabled: !!address,

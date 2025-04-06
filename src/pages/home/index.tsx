@@ -2,7 +2,7 @@ import { useAppKitAccount } from "@reown/appkit/react";
 import { useMemo } from "react";
 
 import { ConnectButton } from "@/components/connect-button";
-import { useListStakesByUserAddress } from "@/services/staking/list-stakes-by-user-address";
+import { useListAllStakesByUserAddress } from "@/services/staking/list-stakes-by-user-address";
 import { AprModal } from "@/components/apr-modal";
 import { CreateStakeModal } from "@/components/create-stake-modal";
 
@@ -11,7 +11,7 @@ import { ClaimAllModal } from "./containers/claim-all-modal";
 
 export function HomePage() {
   const { address, isConnected } = useAppKitAccount({ namespace: "eip155" });
-  const { data: stakes, isPending } = useListStakesByUserAddress({
+  const { data: stakes, isPending } = useListAllStakesByUserAddress({
     user: address,
   });
 
@@ -84,7 +84,7 @@ export function HomePage() {
       <footer className="border-t">
         <div className="max-w-(--container-width) mx-auto py-6 px-4">
           <p className="text-sm text-muted-foreground text-center">
-            © 2024 TokenFi. All rights reserved.
+            © {new Date().getFullYear()} TokenFi. All rights reserved.
           </p>
         </div>
       </footer>

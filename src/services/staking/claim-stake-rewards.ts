@@ -8,24 +8,30 @@ import {
 } from "@/lib/packages/wagmi";
 import { TOKENFI_STAKING_POOL_CONTRACT_ADDRESS } from "@/lib/constants";
 
+type UseClaimStakeRewardsParams = {
+  stakeIndex: number;
+  chainId: number;
+};
+
 export function useClaimStakeRewards() {
   const account = useAppKitAccount({ namespace: "eip155" });
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (stakeIndex: number) => {
-      await switchUserChain({ chainId: 56 });
+    mutationFn: async ({ chainId, stakeIndex }: UseClaimStakeRewardsParams) => {
+      await switchUserChain({ chainId });
 
       return writeContractAndWaitForReceipt({
         abi: StakingPoolContract.abi,
         address: TOKENFI_STAKING_POOL_CONTRACT_ADDRESS,
         functionName: "claimRewards",
+        chainId,
         args: [BigInt(stakeIndex)],
       });
     },
-    onSuccess: () => {
+    onSuccess: (_, { chainId }) => {
       return queryClient.invalidateQueries({
-        queryKey: ["get-user-stakes", { user: account.address }],
+        queryKey: ["get-user-stakes", { user: account.address, chainId }],
       });
     },
   });

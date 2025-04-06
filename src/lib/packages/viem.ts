@@ -1,5 +1,5 @@
 import { createPublicClient, fallback, http, PublicClient } from "viem";
-import { bsc } from "viem/chains";
+import { bsc, mainnet } from "viem/chains";
 
 import { NetworkId, networks } from "./app-kit";
 
@@ -10,6 +10,11 @@ const PUBLIC_NODES: Record<NetworkId, string[] | readonly string[]> = {
     "https://binance.llamarpc.com",
     "https://bsc-dataseed1.defibit.io",
     "https://bsc-dataseed1.binance.org",
+  ],
+  [1]: [
+    ...mainnet.rpcUrls.default.http,
+    "https://mainnet.publicnode.com",
+    "https://eth.llamarpc.com",
   ],
 };
 

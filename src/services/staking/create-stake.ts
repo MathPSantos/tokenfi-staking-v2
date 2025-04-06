@@ -16,12 +16,13 @@ import { useGetStakingTokenAddress } from "./get-staking-token-address";
 
 type CreateStakeData = {
   amount: bigint;
+  chainId: number;
   duration: bigint;
 };
 
-export function useCreateStake() {
+export function useCreateStake({ chainId }: { chainId: number }) {
   const queryClient = useQueryClient();
-  const { data: stakingTokenAddress } = useGetStakingTokenAddress();
+  const { data: stakingTokenAddress } = useGetStakingTokenAddress({ chainId });
   const account = useAppKitAccount({ namespace: "eip155" });
 
   return useMutation({
@@ -32,7 +33,7 @@ export function useCreateStake() {
         throw new Error("Staking token address not found");
 
       await switchUserChain({
-        chainId: 56,
+        chainId: data.chainId,
       });
 
       const balance = await readContract(wagmiAdapter.wagmiConfig, {
@@ -45,7 +46,7 @@ export function useCreateStake() {
       if (balance < data.amount) throw new Error("Insufficient balance");
 
       await approveAllowance({
-        chainId: 56,
+        chainId: data.chainId,
         spenderAddress: TOKENFI_STAKING_POOL_CONTRACT_ADDRESS,
         tokenAddress: stakingTokenAddress,
         transferValue: data.amount,
@@ -56,6 +57,7 @@ export function useCreateStake() {
         abi: StakingPoolContract.abi,
         address: TOKENFI_STAKING_POOL_CONTRACT_ADDRESS,
         functionName: "stake",
+        chainId: data.chainId,
         args: [data.amount, 0, data.duration],
       });
     },

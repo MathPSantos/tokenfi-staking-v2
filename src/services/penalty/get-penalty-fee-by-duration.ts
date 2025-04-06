@@ -8,14 +8,16 @@ import { useGetDurationThresholds } from "../constants-multiplier/get-duration-t
 
 type UseGetPenaltyFeeByDurationParams = {
   duration: bigint;
+  chainId: number;
 };
 
 export function useGetPenaltyFeeByDuration({
   duration,
+  chainId,
 }: UseGetPenaltyFeeByDurationParams) {
   const { data: penaltyFeeCalculatorContractAddress } =
-    useGetPenaltyFeeCalculatorContractAddress();
-  const { data: durationGroups } = useGetDurationThresholds();
+    useGetPenaltyFeeCalculatorContractAddress({ chainId });
+  const { data: durationGroups } = useGetDurationThresholds({ chainId });
 
   return useQuery({
     queryKey: ["penalty-fee-by-duration", { duration: duration.toString() }],
@@ -37,6 +39,7 @@ export function useGetPenaltyFeeByDuration({
         address: penaltyFeeCalculatorContractAddress,
         functionName: "penaltyFeePerGroup",
         args: [BigInt(index)],
+        chainId,
       });
     },
     enabled: !!penaltyFeeCalculatorContractAddress && !!durationGroups,

@@ -8,6 +8,7 @@ import { writeContractAndWaitForReceipt } from "@/lib/packages/wagmi";
 type UseUnstakeFundsParams = {
   amount: bigint;
   stakeIndex: number;
+  chainId: number;
 };
 
 export function useUnstakeFunds() {
@@ -15,17 +16,22 @@ export function useUnstakeFunds() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ amount, stakeIndex }: UseUnstakeFundsParams) => {
+    mutationFn: async ({
+      amount,
+      stakeIndex,
+      chainId,
+    }: UseUnstakeFundsParams) => {
       return writeContractAndWaitForReceipt({
         abi: StakingPoolContract.abi,
         address: TOKENFI_STAKING_POOL_CONTRACT_ADDRESS,
         functionName: "unstake",
+        chainId,
         args: [amount, BigInt(stakeIndex)],
       });
     },
-    onSuccess: () => {
+    onSuccess: (_, { chainId }) => {
       return queryClient.invalidateQueries({
-        queryKey: ["get-user-stakes", { user: account?.address }],
+        queryKey: ["get-user-stakes", { user: account?.address, chainId }],
       });
     },
   });

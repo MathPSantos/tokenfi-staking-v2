@@ -18,11 +18,14 @@ import { useClaimStakeRewards } from "@/services/staking/claim-stake-rewards";
 type ClaimAllModalProps = {
   stakes: {
     rewards: bigint;
+    chainId: number;
   }[];
 };
 
 export function ClaimAllModal({ stakes }: ClaimAllModalProps) {
-  const { data: rewardsToken } = useGetRewardsToken();
+  const { data: rewardsToken } = useGetRewardsToken({
+    chainId: stakes[0].chainId,
+  });
 
   const { mutateAsync: claimRewardsAsync } = useClaimStakeRewards();
 
@@ -39,7 +42,10 @@ export function ClaimAllModal({ stakes }: ClaimAllModalProps) {
     try {
       setIsClaimming(true);
       for (let i = 0; i < stakes.length; i++) {
-        await claimRewardsAsync(i);
+        await claimRewardsAsync({
+          chainId: stakes[i].chainId,
+          stakeIndex: i,
+        });
         if (i < stakes.length - 1) {
           setCurrentIndex(i + 1);
         }

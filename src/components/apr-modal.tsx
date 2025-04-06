@@ -1,6 +1,7 @@
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -17,13 +18,25 @@ const percentageFormatter = new Intl.NumberFormat("en-US", {
 });
 
 export function AprModal() {
-  const { data: durations } = useGetDurationThresholds();
+  const { data: durations } = useGetDurationThresholds({ chainId: 56 });
 
   // Get APR for each duration
-  const { data: apr3m } = useAPRForDuration(durations?.[0]?.threshold || 0n);
-  const { data: apr1y } = useAPRForDuration(durations?.[1]?.threshold || 0n);
-  const { data: apr2y } = useAPRForDuration(durations?.[2]?.threshold || 0n);
-  const { data: apr4y } = useAPRForDuration(durations?.[3]?.threshold || 0n);
+  const { data: apr3m } = useAPRForDuration({
+    threshold: durations?.[0]?.threshold || 0n,
+    chainId: 56,
+  });
+  const { data: apr1y } = useAPRForDuration({
+    threshold: durations?.[1]?.threshold || 0n,
+    chainId: 56,
+  });
+  const { data: apr2y } = useAPRForDuration({
+    threshold: durations?.[2]?.threshold || 0n,
+    chainId: 56,
+  });
+  const { data: apr4y } = useAPRForDuration({
+    threshold: durations?.[3]?.threshold || 0n,
+    chainId: 1,
+  });
 
   const durationsList = [
     { label: "3 Months", apr: apr3m },
@@ -42,6 +55,9 @@ export function AprModal() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>APR by Duration</DialogTitle>
+          <DialogDescription className="sr-only">
+            The APR is the annualized rate of return for a given duration.
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {durationsList.map((duration) => (

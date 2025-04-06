@@ -12,11 +12,15 @@ const DEFAULT_AMOUNT = parseUnits("1", TOKENFI_STAKING_TOKEN_DECIMALS);
 export function useGetMultiplierByDuration({
   amount = DEFAULT_AMOUNT,
   duration,
+  chainId,
 }: {
   amount?: bigint;
   duration?: bigint;
+  chainId: number;
 }) {
-  const { data: address } = useGetRewardsMultiplierContractAddress();
+  const { data: address } = useGetRewardsMultiplierContractAddress({ chainId });
+
+  console.log(amount, duration, address);
 
   return useQuery({
     queryKey: [
@@ -37,6 +41,7 @@ export function useGetMultiplierByDuration({
         address,
         functionName: "getMultiplier",
         args: [amount, duration],
+        chainId,
       });
     },
     enabled: !!amount && !!duration,

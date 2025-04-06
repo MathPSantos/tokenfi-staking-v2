@@ -6,11 +6,11 @@ import { wagmiAdapter } from "@/lib/packages/app-kit";
 
 import { useGetRewardsTokenAddress } from "./get-rewards-token-address";
 
-export function useGetRewardsToken() {
-  const { data: rewardsTokenAddress } = useGetRewardsTokenAddress();
+export function useGetRewardsToken({ chainId }: { chainId: number }) {
+  const { data: rewardsTokenAddress } = useGetRewardsTokenAddress({ chainId });
 
   return useQuery({
-    queryKey: ["rewards-token", { rewardsTokenAddress }],
+    queryKey: ["rewards-token", { rewardsTokenAddress, chainId }],
     queryFn: async () => {
       if (!rewardsTokenAddress) {
         throw new Error("Rewards token address not found");

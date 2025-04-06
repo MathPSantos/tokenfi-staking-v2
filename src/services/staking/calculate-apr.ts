@@ -3,11 +3,14 @@ import { readContract, readContracts } from "@wagmi/core";
 import { parseUnits } from "viem";
 
 import {
-  UNISWAP_V2_ROUTER_CONTRACT_ADDRESS,
   TOKENFI_STAKING_TOKEN_DECIMALS,
   TOKENFI_REWARD_TOKEN_DECIMALS,
+  DIAMOND_ADDRESS,
 } from "@/lib/constants";
-import { UniswapV2Router01Contract } from "@/lib/contracts";
+import {
+  PaymentModuleContract,
+  UniswapV2Router01Contract,
+} from "@/lib/contracts";
 import { wagmiAdapter } from "@/lib/packages/app-kit";
 
 import { useGetTotalWeightedStake } from "./get-total-weighted-stake";
@@ -19,6 +22,7 @@ type UseFetchAPRParams = {
   amount: bigint;
   multiplier: bigint;
   isNewStaking: boolean;
+  chainId: number;
 };
 
 const ONE_YEAR_IN_SECONDS = 31536000;
@@ -32,10 +36,11 @@ export function useCalculateAPR({
   amount,
   multiplier,
   isNewStaking,
+  chainId,
 }: UseFetchAPRParams) {
-  const { data: totalWeight } = useGetTotalWeightedStake();
-  const { data: rewardsRate } = useGetRewardsRatePerSecond();
-  const { data: routerTokenAmounts } = useRouterTokenAmounts();
+  const { data: totalWeight } = useGetTotalWeightedStake({ chainId });
+  const { data: rewardsRate } = useGetRewardsRatePerSecond({ chainId });
+  const { data: routerTokenAmounts } = useRouterTokenAmounts({ chainId });
 
   const stakingTokenAmounts = routerTokenAmounts?.stakingTokenAmounts;
   const rewardsTokenAmounts = routerTokenAmounts?.rewardsTokenAmounts;
@@ -51,6 +56,7 @@ export function useCalculateAPR({
         stakingTokenAmounts: stakingTokenAmounts?.toString(),
         rewardsTokenAmounts: rewardsTokenAmounts?.toString(),
         isNewStaking,
+        chainId,
       },
     ],
     queryFn: () => {
@@ -99,27 +105,36 @@ export function useCalculateAPR({
   });
 }
 
-function useRouterTokenAmounts() {
-  const { data: stakingToken } = useGetStakingTokenAddress();
-  const { data: rewardsToken } = useGetRewardsTokenAddress();
+function useRouterTokenAmounts({ chainId }: { chainId: number }) {
+  const { data: stakingToken } = useGetStakingTokenAddress({ chainId });
+  const { data: rewardsToken } = useGetRewardsTokenAddress({ chainId });
 
   return useQuery({
-    queryKey: ["router-token-amounts", { stakingToken, rewardsToken }],
+    queryKey: ["router-token-amounts", { stakingToken, rewardsToken, chainId }],
     queryFn: async () => {
       if (!stakingToken || !rewardsToken) {
         throw new Error("Invalid token addresses");
       }
 
+      const routerAddress = await readContract(wagmiAdapter.wagmiConfig, {
+        abi: PaymentModuleContract.abi,
+        chainId,
+        address: DIAMOND_ADDRESS,
+        functionName: "getRouterAddress",
+      });
+
       const weth = await readContract(wagmiAdapter.wagmiConfig, {
         abi: UniswapV2Router01Contract.abi,
-        address: UNISWAP_V2_ROUTER_CONTRACT_ADDRESS,
+        address: routerAddress,
         functionName: "WETH",
+        chainId,
       });
 
       const contract = {
         abi: UniswapV2Router01Contract.abi,
-        address: UNISWAP_V2_ROUTER_CONTRACT_ADDRESS,
+        address: routerAddress,
         functionName: "getAmountsIn",
+        chainId,
       } as const;
 
       const data = await readContracts(wagmiAdapter.wagmiConfig, {

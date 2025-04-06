@@ -6,11 +6,11 @@ import { wagmiAdapter } from "@/lib/packages/app-kit";
 
 import { useGetStakingTokenAddress } from "./get-staking-token-address";
 
-export function useGetStakingToken() {
-  const { data: stakingTokenAddress } = useGetStakingTokenAddress();
+export function useGetStakingToken({ chainId }: { chainId: number }) {
+  const { data: stakingTokenAddress } = useGetStakingTokenAddress({ chainId });
 
   return useQuery({
-    queryKey: ["staking-token", { stakingTokenAddress }],
+    queryKey: ["staking-token", { stakingTokenAddress, chainId }],
     queryFn: async () => {
       if (!stakingTokenAddress) {
         throw new Error("Staking token address not found");
@@ -25,16 +25,19 @@ export function useGetStakingToken() {
               abi: erc20Abi,
               address: stakingTokenAddress,
               functionName: "name",
+              chainId,
             },
             {
               abi: erc20Abi,
               address: stakingTokenAddress,
               functionName: "symbol",
+              chainId,
             },
             {
               abi: erc20Abi,
               address: stakingTokenAddress,
               functionName: "decimals",
+              chainId,
             },
           ],
         }

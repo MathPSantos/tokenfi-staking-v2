@@ -28,6 +28,7 @@ type UnstakeModalProps = {
     stakedAmount: bigint;
     rewards: bigint;
     minimumStakeTimestamp: bigint;
+    chainId: number;
   };
   index: number;
 };
@@ -37,8 +38,10 @@ function UnstakeModalContent({
   stake,
   index,
 }: UnstakeModalProps) {
-  const { data: rewardsToken } = useGetRewardsToken();
-  const { data: stakingToken } = useGetStakingToken();
+  const { data: rewardsToken } = useGetRewardsToken({ chainId: stake.chainId });
+  const { data: stakingToken } = useGetStakingToken({
+    chainId: stake.chainId,
+  });
   const [unstakeAmountRaw, setUnstakeAmount] = useState<bigint>(0n);
   const [debouncedUnstakeAmount, setDebouncedUnstakeAmount] =
     useState<bigint>(0n);
@@ -57,9 +60,11 @@ function UnstakeModalContent({
     useCalculatePenalty({
       duration: stake.duration,
       stakedAmount: unstakeAmount,
+      chainId: stake.chainId,
     });
   const { data: penaltyPercentage = 0n } = useGetPenaltyFeeByDuration({
     duration: stake.duration,
+    chainId: stake.chainId,
   });
 
   const { mutate: unstakeFunds, isPending: isUnstaking } = useUnstakeFunds();
@@ -107,14 +112,14 @@ function UnstakeModalContent({
 
   const handleUnstake = useCallback(() => {
     unstakeFunds(
-      { amount: unstakeAmount, stakeIndex: index },
+      { amount: unstakeAmount, stakeIndex: index, chainId: stake.chainId },
       {
         onSuccess: () => {
           onOpenChange(false);
         },
       }
     );
-  }, [unstakeAmount, index, unstakeFunds, onOpenChange]);
+  }, [unstakeAmount, index, stake.chainId, unstakeFunds, onOpenChange]);
 
   return (
     <>

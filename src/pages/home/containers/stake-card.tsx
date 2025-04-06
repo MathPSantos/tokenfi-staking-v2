@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { UnstakeModal } from "@/components/unstake-modal";
+import { ChainLogo } from "@/components/ui/chain-logo";
 
 type StakeCardProps = {
   stake: {
@@ -30,21 +31,26 @@ type StakeCardProps = {
     duration: bigint;
     rewardPerTokenPaid: bigint;
     rewards: bigint;
+    chainId: number;
   };
   index: number;
 };
 
 export function StakeCard({ stake, index }: StakeCardProps) {
   const [open, setOpen] = useState(false);
-  const { data: stakingToken } = useGetStakingToken();
-  const { data: rewardsToken } = useGetRewardsToken();
+  const { data: stakingToken } = useGetStakingToken({ chainId: stake.chainId });
+  const { data: rewardsToken } = useGetRewardsToken({
+    chainId: stake.chainId,
+  });
   const { data: multiplier } = useGetMultiplierByDuration({
     duration: stake.duration,
+    chainId: stake.chainId,
   });
   const { data: apr } = useCalculateAPR({
     amount: stake.stakedAmount,
     multiplier: multiplier || 0n,
     isNewStaking: false,
+    chainId: stake.chainId,
   });
 
   const { mutate: claimRewards, isPending: isClaimingRewards } =
@@ -116,14 +122,23 @@ export function StakeCard({ stake, index }: StakeCardProps) {
   }, [stake.stakedAmount, stakingToken?.decimals]);
 
   const handleClaimRewards = useCallback(() => {
-    claimRewards(index);
-  }, [claimRewards, index]);
+    claimRewards({ chainId: stake.chainId, stakeIndex: index });
+  }, [claimRewards, index, stake.chainId]);
 
   return (
     <>
       <div className="space-y-6 rounded-lg border p-4">
         <div className="flex items-center justify-between">
-          <TokenFiLogo className="size-12" />
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <TokenFiLogo className="size-12" />
+              <ChainLogo
+                chainId={stake.chainId}
+                className="size-5 absolute bottom-0.5 -right-1"
+              />
+            </div>
+            <span className="text-sm font-semibold">TOKEN</span>
+          </div>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -194,7 +209,10 @@ export function StakeCard({ stake, index }: StakeCardProps) {
           </div>
           <div className="flex items-center justify-between *:last:text-end">
             <span className="text-sm">Network</span>
-            <span className="text-sm font-semibold">BSC</span>
+            <span className="text-sm font-semibold flex items-center gap-1">
+              <ChainLogo chainId={stake.chainId} className="size-4" />
+              {stake.chainId === 56 ? "BSC" : "ETH"}
+            </span>
           </div>
           <div className="flex items-center justify-between *:last:text-end">
             <span className="text-sm">Staked</span>
