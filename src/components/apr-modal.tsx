@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { formatPercentage } from "@/lib/utils";
 
 export function AprModal() {
   const { data: bscThresholds } = useGetDurationThresholds({ chainId: 56 });
@@ -35,6 +36,10 @@ export function AprModal() {
     threshold: bscThresholds?.[2]?.threshold || 0n,
     chainId: 56,
   });
+  const bsc4YearsAPR = useAPRForDuration({
+    threshold: bscThresholds?.[3]?.threshold || 0n,
+    chainId: 56,
+  });
 
   const eth3MonthsAPR = useAPRForDuration({
     threshold: ethThresholds?.[0]?.threshold || 0n,
@@ -46,6 +51,10 @@ export function AprModal() {
   });
   const eth2YearsAPR = useAPRForDuration({
     threshold: ethThresholds?.[2]?.threshold || 0n,
+    chainId: 1,
+  });
+  const eth4YearsAPR = useAPRForDuration({
+    threshold: ethThresholds?.[3]?.threshold || 0n,
     chainId: 1,
   });
 
@@ -64,6 +73,11 @@ export function AprModal() {
       duration: "2 Years",
       bscAPR: bsc2YearsAPR.data,
       ethAPR: eth2YearsAPR.data,
+    },
+    {
+      duration: "4 Years",
+      bscAPR: bsc4YearsAPR.data,
+      ethAPR: eth4YearsAPR.data,
     },
   ];
 
@@ -94,10 +108,14 @@ export function AprModal() {
                 <TableRow key={item.duration}>
                   <TableCell>{item.duration}</TableCell>
                   <TableCell>
-                    {item.bscAPR ? `${item.bscAPR.toFixed(2)}%` : "Loading..."}
+                    {item.bscAPR
+                      ? `${formatPercentage.format(item.bscAPR)}`
+                      : "Loading..."}
                   </TableCell>
                   <TableCell>
-                    {item.ethAPR ? `${item.ethAPR.toFixed(2)}%` : "Loading..."}
+                    {item.ethAPR
+                      ? `${formatPercentage.format(item.ethAPR)}`
+                      : "Loading..."}
                   </TableCell>
                 </TableRow>
               ))}
