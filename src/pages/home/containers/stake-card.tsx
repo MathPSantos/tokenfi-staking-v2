@@ -234,13 +234,13 @@ export function StakeCard({ stake, index }: StakeCardProps) {
 
         <div className="space-y-2">
           <TenderlySimulateButton
-            onSimulate={() => ({
+            transaction={{
               abi: StakingPoolContract.abi,
               functionName: "claimRewards",
               args: [BigInt(index)] as const,
               address: TOKENFI_STAKING_POOL_CONTRACT_ADDRESS,
               chainId: stake.chainId,
-            })}
+            }}
           />
           <Button
             variant="outline"

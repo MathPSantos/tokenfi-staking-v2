@@ -21,7 +21,7 @@ type TenderlySimulateButtonProps<
   functionName extends ContractFunctionName<abi, "nonpayable" | "payable">,
   args extends ContractFunctionArgs<abi, "nonpayable" | "payable", functionName>
 > = Omit<ComponentPropsWithoutRef<typeof Button>, "children" | "onClick"> & {
-  onSimulate?: () => {
+  transaction: {
     abi: abi;
     account?: string;
     address: string;
@@ -37,7 +37,7 @@ export function TenderlySimulateButton<
   functionName extends ContractFunctionName<abi, "nonpayable" | "payable">,
   args extends ContractFunctionArgs<abi, "nonpayable" | "payable", functionName>
 >({
-  onSimulate,
+  transaction,
   ...props
 }: TenderlySimulateButtonProps<abi, functionName, args>) {
   const [isPending, setIsPending] = useState(false);
@@ -47,22 +47,21 @@ export function TenderlySimulateButton<
   const handleClick = useCallback(async () => {
     try {
       setIsPending(true);
-      const input = await onSimulate?.();
-      if (!input) return;
+      if (!transaction) return;
       const [blockNumber, gasPrice] = await Promise.all([
         getBlockNumber(wagmiAdapter.wagmiConfig),
         getGasPrice(wagmiAdapter.wagmiConfig),
       ]);
       await mutateAsync({
-        chainId: input.chainId ?? 1,
+        chainId: transaction.chainId ?? 1,
         blockNumber: blockNumber,
         gasPrice: gasPrice,
-        from: input.account ?? account?.address ?? "",
-        to: input.address,
+        from: transaction.account ?? account?.address ?? "",
+        to: transaction.address,
         input: encodeFunctionData({
-          abi: input.abi,
-          functionName: input.functionName,
-          args: input.args,
+          abi: transaction.abi,
+          functionName: transaction.functionName,
+          args: transaction.args,
         } as EncodeFunctionDataParameters),
       });
     } catch (error) {
@@ -70,7 +69,7 @@ export function TenderlySimulateButton<
     } finally {
       setIsPending(false);
     }
-  }, [onSimulate, mutateAsync, account?.address]);
+  }, [transaction, mutateAsync, account?.address]);
 
   return (
     <div className="@container/grid grid grid-cols-[repeat(auto-fit,minmax(min(100%,148px),1fr))] gap-2">
