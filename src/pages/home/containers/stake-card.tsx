@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UnstakeModal } from "@/components/unstake-modal";
 import { ChainLogo } from "@/components/ui/chain-logo";
+import { TenderlySimulateButton } from "@/components/ui/tenderly-simulate-button";
+import { StakingPoolContract } from "@/lib/contracts";
+import { TOKENFI_STAKING_POOL_CONTRACT_ADDRESS } from "@/lib/constants";
 
 type StakeCardProps = {
   stake: {
@@ -229,16 +232,27 @@ export function StakeCard({ stake, index }: StakeCardProps) {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={handleClaimRewards}
-          disabled={isClaimingRewards}
-        >
-          {isClaimingRewards
-            ? "Claiming..."
-            : `Claim ${rewards} ${rewardsToken?.symbol}`}
-        </Button>
+        <div className="space-y-2">
+          <TenderlySimulateButton
+            onSimulate={() => ({
+              abi: StakingPoolContract.abi,
+              functionName: "claimRewards",
+              args: [BigInt(index)] as const,
+              address: TOKENFI_STAKING_POOL_CONTRACT_ADDRESS,
+              chainId: stake.chainId,
+            })}
+          />
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={handleClaimRewards}
+            disabled={isClaimingRewards}
+          >
+            {isClaimingRewards
+              ? "Claiming..."
+              : `Claim ${rewards} ${rewardsToken?.symbol}`}
+          </Button>
+        </div>
       </div>
 
       <UnstakeModal

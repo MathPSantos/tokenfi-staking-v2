@@ -8,7 +8,7 @@ import {
 } from "@/lib/packages/wagmi";
 import { TOKENFI_STAKING_POOL_CONTRACT_ADDRESS } from "@/lib/constants";
 
-type UseClaimStakeRewardsParams = {
+export type UseClaimStakeRewardsParams = {
   stakeIndex: number;
   chainId: number;
 };

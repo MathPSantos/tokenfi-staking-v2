@@ -20,8 +20,6 @@ export function useGetMultiplierByDuration({
 }) {
   const { data: address } = useGetRewardsMultiplierContractAddress({ chainId });
 
-  console.log(amount, duration, address);
-
   return useQuery({
     queryKey: [
       "get-multiplier-by-duration",
