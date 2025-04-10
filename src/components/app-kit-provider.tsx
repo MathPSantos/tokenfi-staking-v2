@@ -25,6 +25,13 @@ createAppKit({
   metadata,
   features: {
     analytics: false,
+    swaps: false,
+    email: false,
+    history: false,
+    receive: false,
+    send: false,
+    onramp: false,
+    socials: false,
   },
   themeMode: "light",
 });
