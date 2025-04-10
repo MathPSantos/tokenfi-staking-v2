@@ -1,6 +1,6 @@
 import { useAppKitAccount } from "@reown/appkit/react";
 import { getBlockNumber, getGasPrice } from "@wagmi/core";
-import { ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon, Loader2Icon, XCircleIcon } from "lucide-react";
 import { ComponentPropsWithoutRef, useCallback, useState } from "react";
 import {
   Abi,
@@ -40,13 +40,17 @@ export function TenderlySimulateButton<
   transaction,
   ...props
 }: TenderlySimulateButtonProps<abi, functionName, args>) {
-  const [isPending, setIsPending] = useState(false);
+  const [state, setState] = useState<"idle" | "pending" | "success" | "error">(
+    "idle"
+  );
   const { data, mutateAsync } = useTenderlySimulateTransaction();
   const account = useAppKitAccount({ namespace: "eip155" });
 
   const handleClick = useCallback(async () => {
+    if (["pending", "success"].includes(state)) return;
+
     try {
-      setIsPending(true);
+      setState("pending");
       if (!transaction) return;
       const [blockNumber, gasPrice] = await Promise.all([
         getBlockNumber(wagmiAdapter.wagmiConfig),
@@ -64,41 +68,49 @@ export function TenderlySimulateButton<
           args: transaction.args,
         } as EncodeFunctionDataParameters),
       });
+      setState("success");
     } catch (error) {
       console.error(error);
-    } finally {
-      setIsPending(false);
+      setState("error");
     }
-  }, [transaction, mutateAsync, account?.address]);
+  }, [state, transaction, mutateAsync, account?.address]);
 
   return (
-    <div className="@container/grid grid grid-cols-[repeat(auto-fit,minmax(min(100%,148px),1fr))] gap-2">
-      <Button
-        {...props}
-        variant="secondary"
-        disabled={isPending}
-        onClick={handleClick}
-        className="@container/simulate-button"
-      >
-        <TenderlyIcon className="size-4" />
-        {isPending ? (
-          "Simulating..."
-        ) : (
-          <span className="">
-            Simulate{" "}
-            <span className="hidden @3xs/simulate-button:inline">
-              on Tenderly
-            </span>
-          </span>
-        )}
-      </Button>
-      {data?.url && (
-        <Button asChild variant="secondary">
-          <a href={data.url} target="_blank" rel="nofollow noreferrer">
-            Simulation Link <ExternalLinkIcon className="size-4" />
-          </a>
-        </Button>
-      )}
-    </div>
+    <Button
+      {...props}
+      asChild={state === "success"}
+      variant="secondary"
+      disabled={state === "pending"}
+      onClick={handleClick}
+    >
+      {
+        {
+          idle: (
+            <>
+              <TenderlyIcon className="size-4" />
+              Simulate on Tenderly
+            </>
+          ),
+          pending: (
+            <>
+              <Loader2Icon className="size-4 animate-spin" />
+              Simulating...
+            </>
+          ),
+          success: (
+            <a href={data?.url} target="_blank" rel="nofollow noreferrer">
+              View simulation
+              <ExternalLinkIcon className="size-4" />
+            </a>
+          ),
+          error: (
+            <>
+              <XCircleIcon className="size-4" />
+              Retry simulation
+            </>
+          ),
+        }[state]
+      }
+    </Button>
   );
 }

@@ -232,7 +232,7 @@ export function StakeCard({ stake, index }: StakeCardProps) {
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="gap-2 grid">
           <TenderlySimulateButton
             transaction={{
               abi: StakingPoolContract.abi,
