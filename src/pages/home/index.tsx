@@ -29,7 +29,7 @@ export function HomePage() {
       <header className="border-b">
         <div className="flex items-center gap-2 max-w-(--container-width) mx-auto py-3 px-4">
           <strong className="block me-auto text-sm font-semibold">
-            TokenFi Staking V2
+            TokenFi Helpers
           </strong>
           <AprModal />
           <ConnectButton />

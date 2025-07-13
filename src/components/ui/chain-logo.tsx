@@ -19,71 +19,214 @@ export function ChainLogo({ chainId, ...props }: ChainLogoProps) {
 function BSCLogo(props: SVGAttributes<SVGSVGElement>) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      {...props}
-    >
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <defs>
+      <filter
+        id="bnb-a"
+        width="111.7%"
+        height="111.7%"
+        x="-5.8%"
+        y="-4.2%"
+        filterUnits="objectBoundingBox"
+      >
+        <feOffset
+          dy="0.5"
+          in="SourceAlpha"
+          result="shadowOffsetOuter1"
+        ></feOffset>
+        <feGaussianBlur
+          in="shadowOffsetOuter1"
+          result="shadowBlurOuter1"
+          stdDeviation="0.5"
+        ></feGaussianBlur>
+        <feComposite
+          in="shadowBlurOuter1"
+          in2="SourceAlpha"
+          operator="out"
+          result="shadowBlurOuter1"
+        ></feComposite>
+        <feColorMatrix
+          in="shadowBlurOuter1"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.199473505 0"
+        ></feColorMatrix>
+      </filter>
+      <filter
+        id="bnb-d"
+        width="117.5%"
+        height="117.5%"
+        x="-8.8%"
+        y="-6.2%"
+        filterUnits="objectBoundingBox"
+      >
+        <feOffset
+          dy="0.5"
+          in="SourceAlpha"
+          result="shadowOffsetOuter1"
+        ></feOffset>
+        <feGaussianBlur
+          in="shadowOffsetOuter1"
+          result="shadowBlurOuter1"
+          stdDeviation="0.5"
+        ></feGaussianBlur>
+        <feColorMatrix
+          in="shadowBlurOuter1"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.204257246 0"
+        ></feColorMatrix>
+      </filter>
+      <linearGradient id="bnb-c" x1="50%" x2="50%" y1="0%" y2="100%">
+        <stop offset="0%" stopColor="#FFF" stopOpacity="0.5"></stop>
+        <stop offset="100%" stopOpacity="0.5"></stop>
+      </linearGradient>
+      <circle id="bnb-b" cx="16" cy="15" r="15"></circle>
       <path
+        id="bnb-e"
+        d="M12.116 13.404 16 9.52l3.886 3.886 2.26-2.26L16 5l-6.144 6.144zM6 15l2.26-2.26L10.52 15l-2.26 2.26zm6.116 1.596L16 20.48l3.886-3.886 2.26 2.259L16 25l-6.144-6.144-.003-.003zM21.48 15l2.26-2.26L26 15l-2.26 2.26zm-3.188-.002h.002v.002L16 17.295l-2.291-2.292-.004-.003.004-.003.401-.402.195-.195L16 12.706l2.293 2.293"
+      ></path>
+    </defs>
+    <g fill="none" fillRule="nonzero">
+      <use xlinkHref="#bnb-b" fill="#000" filter="url(#bnb-a)"></use>
+      <use xlinkHref="#bnb-b" fill="#F3BA2F" fillRule="evenodd"></use>
+      <use
+        xlinkHref="#bnb-b"
+        fill="url(#bnb-c)"
         fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10 1.25C14.8328 1.25 18.75 5.16717 18.75 10C18.75 14.8328 14.8328 18.75 10 18.75C5.16717 18.75 1.25 14.8328 1.25 10C1.25 5.16717 5.16717 1.25 10 1.25Z"
-        fill="#F0B90B"
-      />
-      <path
-        d="M6.05899 9.99981L6.0653 12.3135L8.03125 13.4704V14.8249L4.91476 12.9971V9.32323L6.05899 9.99981ZM6.05899 7.68611V9.03437L4.91406 8.35708V7.00883L6.05899 6.33154L7.20954 7.00883L6.05899 7.68611ZM8.85226 7.00883L9.99719 6.33154L11.1477 7.00883L9.99719 7.68611L8.85226 7.00883Z"
-        fill="white"
-      />
-      <path
-        d="M6.88672 11.8339V10.4794L8.03165 11.1567V12.5049L6.88672 11.8339ZM8.85266 13.9555L9.9976 14.6328L11.1481 13.9555V15.3038L9.9976 15.9811L8.85266 15.3038V13.9555ZM12.7902 7.00883L13.9351 6.33154L15.0856 7.00883V8.35708L13.9351 9.03437V7.68611L12.7902 7.00883ZM13.9351 12.3135L13.9414 9.99981L15.0863 9.32253V12.9964L11.9699 14.8242V13.4697L13.9351 12.3135Z"
-        fill="white"
-      />
-      <path
-        d="M13.1137 11.8341L11.9688 12.505V11.1568L13.1137 10.4795V11.8341Z"
-        fill="white"
-      />
-      <path
-        d="M13.1141 8.16569L13.1204 9.52026L11.1488 10.6771V12.9964L10.0039 13.6674L8.85897 12.9964V10.6771L6.88742 9.52026V8.16569L8.03726 7.48841L9.9969 8.65087L11.9684 7.48841L13.119 8.16569H13.1141ZM6.88672 5.85269L9.9976 4.01855L13.1141 5.85269L11.9692 6.52997L9.9976 5.36751L8.03165 6.52997L6.88672 5.85269Z"
-        fill="white"
-      />
-    </svg>
+        style={{ mixBlendMode: "soft-light" }}
+      ></use>
+      <circle
+        cx="16"
+        cy="15"
+        r="14.5"
+        stroke="#000"
+        strokeOpacity="0.097"
+      ></circle>
+      <use xlinkHref="#bnb-e" fill="#000" filter="url(#bnb-d)"></use>
+      <use xlinkHref="#bnb-e" fill="#FFF" fillRule="evenodd"></use>
+    </g>
+  </svg>
   );
 }
 
 function ETHLogo(props: SVGAttributes<SVGSVGElement>) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="20"
-      height="20"
-      viewBox="0 0 20 20"
-      fill="none"
-      {...props}
-    >
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    {...props}
+  >
+    <defs>
+      <filter
+        id="eth-a"
+        width="111.7%"
+        height="111.7%"
+        x="-5.8%"
+        y="-4.2%"
+        filterUnits="objectBoundingBox"
+      >
+        <feOffset
+          dy="0.5"
+          in="SourceAlpha"
+          result="shadowOffsetOuter1"
+        ></feOffset>
+        <feGaussianBlur
+          in="shadowOffsetOuter1"
+          result="shadowBlurOuter1"
+          stdDeviation="0.5"
+        ></feGaussianBlur>
+        <feComposite
+          in="shadowBlurOuter1"
+          in2="SourceAlpha"
+          operator="out"
+          result="shadowBlurOuter1"
+        ></feComposite>
+        <feColorMatrix
+          in="shadowBlurOuter1"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.199473505 0"
+        ></feColorMatrix>
+      </filter>
+      <filter
+        id="eth-d"
+        width="123.3%"
+        height="114.6%"
+        x="-11.7%"
+        y="-5.2%"
+        filterUnits="objectBoundingBox"
+      >
+        <feOffset
+          dy="0.5"
+          in="SourceAlpha"
+          result="shadowOffsetOuter1"
+        ></feOffset>
+        <feGaussianBlur
+          in="shadowOffsetOuter1"
+          result="shadowBlurOuter1"
+          stdDeviation="0.5"
+        ></feGaussianBlur>
+        <feComposite
+          in="shadowBlurOuter1"
+          in2="SourceAlpha"
+          operator="out"
+          result="shadowBlurOuter1"
+        ></feComposite>
+        <feColorMatrix
+          in="shadowBlurOuter1"
+          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.204257246 0"
+        ></feColorMatrix>
+      </filter>
+      <linearGradient id="eth-c" x1="50%" x2="50%" y1="0%" y2="100%">
+        <stop offset="0%" stopColor="#FFF" stopOpacity="0.5"></stop>
+        <stop offset="100%" stopOpacity="0.5"></stop>
+      </linearGradient>
+      <circle id="eth-b" cx="16" cy="15" r="15"></circle>
       <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M10 1.25C14.8328 1.25 18.75 5.16717 18.75 10C18.75 14.8328 14.8328 18.75 10 18.75C5.16717 18.75 1.25 14.8328 1.25 10C1.25 5.16717 5.16717 1.25 10 1.25Z"
-        fill="#F0B90B"
-      />
-      <path
-        d="M6.05899 9.99981L6.0653 12.3135L8.03125 13.4704V14.8249L4.91476 12.9971V9.32323L6.05899 9.99981ZM6.05899 7.68611V9.03437L4.91406 8.35708V7.00883L6.05899 6.33154L7.20954 7.00883L6.05899 7.68611ZM8.85226 7.00883L9.99719 6.33154L11.1477 7.00883L9.99719 7.68611L8.85226 7.00883Z"
-        fill="white"
-      />
-      <path
-        d="M6.88672 11.8339V10.4794L8.03165 11.1567V12.5049L6.88672 11.8339ZM8.85266 13.9555L9.9976 14.6328L11.1481 13.9555V15.3038L9.9976 15.9811L8.85266 15.3038V13.9555ZM12.7902 7.00883L13.9351 6.33154L15.0856 7.00883V8.35708L13.9351 9.03437V7.68611L12.7902 7.00883ZM13.9351 12.3135L13.9414 9.99981L15.0863 9.32253V12.9964L11.9699 14.8242V13.4697L13.9351 12.3135Z"
-        fill="white"
-      />
-      <path
-        d="M13.1137 11.8341L11.9688 12.505V11.1568L13.1137 10.4795V11.8341Z"
-        fill="white"
-      />
-      <path
-        d="M13.1141 8.16569L13.1204 9.52026L11.1488 10.6771V12.9964L10.0039 13.6674L8.85897 12.9964V10.6771L6.88742 9.52026V8.16569L8.03726 7.48841L9.9969 8.65087L11.9684 7.48841L13.119 8.16569H13.1141ZM6.88672 5.85269L9.9976 4.01855L13.1141 5.85269L11.9692 6.52997L9.9976 5.36751L8.03165 6.52997L6.88672 5.85269Z"
-        fill="white"
-      />
-    </svg>
+        id="eth-e"
+        d="M16.498 20.968 24 16.616l-7.502 10.379L9 16.615zm0-17.968 7.497 12.22-7.497 4.353L9 15.22z"
+      ></path>
+    </defs>
+    <g fill="none" fillRule="evenodd">
+      <use xlinkHref="#eth-b" fill="#000" filter="url(#eth-a)"></use>
+      <use xlinkHref="#eth-b" fill="#627EEA"></use>
+      <use
+        xlinkHref="#eth-b"
+        fill="url(#eth-c)"
+        style={{ mixBlendMode: "soft-light" }}
+      ></use>
+      <circle
+        cx="16"
+        cy="15"
+        r="14.5"
+        stroke="#000"
+        strokeOpacity="0.097"
+      ></circle>
+      <g fillRule="nonzero">
+        <use xlinkHref="#eth-e" fill="#000" filter="url(#eth-d)"></use>
+        <use
+          xlinkHref="#eth-e"
+          fill="#FFF"
+          fillOpacity="0"
+          fillRule="evenodd"
+        ></use>
+      </g>
+      <g fill="#FFF" fillRule="nonzero">
+        <path fillOpacity="0.602" d="M16.498 3v8.87l7.497 3.35z"></path>
+        <path d="M16.498 3 9 15.22l7.498-3.35z"></path>
+        <path fillOpacity="0.602" d="M16.498 20.968v6.027L24 16.616z"></path>
+        <path d="M16.498 26.995v-6.028L9 16.616z"></path>
+        <path
+          fillOpacity="0.2"
+          d="m16.498 19.573 7.497-4.353-7.497-3.348z"
+        ></path>
+        <path fillOpacity="0.602" d="m9 15.22 7.498 4.353v-7.701z"></path>
+      </g>
+    </g>
+  </svg>
   );
 }
