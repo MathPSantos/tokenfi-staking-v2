@@ -44,6 +44,7 @@ export function useGetStakingToken({ chainId }: { chainId: number }) {
       );
 
       return {
+        address: stakingTokenAddress,
         name,
         symbol,
         decimals,

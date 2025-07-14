@@ -5,6 +5,7 @@ import { parseUnits } from "viem";
 import {
   TOKENFI_STAKING_TOKEN_DECIMALS,
   TOKENFI_REWARD_TOKEN_DECIMALS,
+  UNISWAP_V2_ROUTER_ADDRESS,
 } from "@/lib/constants";
 import {
   UniswapV2Router01Contract,
@@ -115,9 +116,7 @@ function useRouterTokenAmounts({ chainId }: { chainId: number }) {
       }
 
       const routerAddress: `0x${string}` =
-        chainId == 1
-          ? ("0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D" as const)
-          : ("0x10ED43C718714eb63d5aA57B78B54704E256024E" as const);
+        UNISWAP_V2_ROUTER_ADDRESS[chainId as keyof typeof UNISWAP_V2_ROUTER_ADDRESS];
 
       const weth = await readContract(wagmiAdapter.wagmiConfig, {
         abi: UniswapV2Router01Contract.abi,

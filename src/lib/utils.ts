@@ -104,3 +104,20 @@ export const formatToken = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 0,
   maximumFractionDigits: 2,
 });
+
+type ShortenAddress = (
+  address: string,
+  length?: number,
+  rightLength?: number,
+) => string
+
+export const shortenAddress: ShortenAddress = (
+  address,
+  length = 6,
+  rightLength = length,
+) =>
+  [
+    address.slice(0, length),
+    rightLength > 0 ? address.slice(rightLength * -1) : '',
+  ].join('...')
+  

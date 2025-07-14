@@ -1,10 +1,11 @@
-import { createAppKit } from "@reown/appkit";
+import { createAppKit } from "@reown/appkit/react";
 import { bsc, mainnet } from "@reown/appkit/networks";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { ReactNode } from "react";
 
 import { metadata, projectId, wagmiAdapter } from "@/lib/packages/app-kit";
+import { Footer } from "./footer";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -36,10 +37,15 @@ createAppKit({
   themeMode: "light",
 });
 
-export function AppKitProvider({ children }: { children: ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiAdapter.wagmiConfig}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <div className="min-h-svh [--container-width:1152px] overflow-y-scroll flex flex-col">
+          <main className="flex-1 flex flex-col">{children}</main>
+          <Footer />
+        </div>
+      </QueryClientProvider>
     </WagmiProvider>
   );
 }

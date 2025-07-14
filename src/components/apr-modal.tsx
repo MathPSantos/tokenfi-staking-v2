@@ -2,13 +2,10 @@ import { useGetDurationThresholds } from "@/services/constants-multiplier/get-du
 import { useAPRForDuration } from "@/lib/hooks/use-apr-for-duration";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import {
   Table,
   TableBody,
@@ -18,6 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatPercentage } from "@/lib/utils";
+import { HandCoinsIcon } from "lucide-react";
 
 export function AprModal() {
   const { data: bscThresholds } = useGetDurationThresholds({ chainId: 56 });
@@ -82,47 +80,41 @@ export function AprModal() {
   ];
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">View APR Details</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>APR Details</DialogTitle>
-          <DialogDescription className="sr-only">
-            Current APR values for different staking durations on BSC and ETH
-            chains.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Duration</TableHead>
-                <TableHead>BSC APR</TableHead>
-                <TableHead>ETH APR</TableHead>
+    <HoverCard openDelay={0} closeDelay={0}>
+      <HoverCardTrigger asChild>
+        <Button variant="ghost" size="sm">
+          <HandCoinsIcon />
+          APR
+        </Button>
+      </HoverCardTrigger>
+      <HoverCardContent side="top" className="p-1.5 max-w-[425px]">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Duration</TableHead>
+              <TableHead>BSC APR</TableHead>
+              <TableHead>ETH APR</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {durationsList.map((item) => (
+              <TableRow key={item.duration}>
+                <TableCell>{item.duration}</TableCell>
+                <TableCell>
+                  {item.bscAPR
+                    ? `${formatPercentage.format(item.bscAPR)}`
+                    : "Loading..."}
+                </TableCell>
+                <TableCell>
+                  {item.ethAPR
+                    ? `${formatPercentage.format(item.ethAPR)}`
+                    : "Loading..."}
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {durationsList.map((item) => (
-                <TableRow key={item.duration}>
-                  <TableCell>{item.duration}</TableCell>
-                  <TableCell>
-                    {item.bscAPR
-                      ? `${formatPercentage.format(item.bscAPR)}`
-                      : "Loading..."}
-                  </TableCell>
-                  <TableCell>
-                    {item.ethAPR
-                      ? `${formatPercentage.format(item.ethAPR)}`
-                      : "Loading..."}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </DialogContent>
-    </Dialog>
+            ))}
+          </TableBody>
+        </Table>
+      </HoverCardContent>
+    </HoverCard>
   );
 }
